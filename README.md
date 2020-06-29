@@ -1,5 +1,7 @@
 # Swingy
 
+<img src='../assets/wethinkcode-logo-blue.png'></img>
+
 
 A minimalistic Java RPG game that can be played either on a GUI or a CLI or even allow switching between them during gameplay. The program needs to follow the Model-View-Controller architecture, automated Maven build and validate user input through annotation validation(Hibernate). Game data is persisted to a MySQL database upon game exit or at any moment the user decides to save a game state.
 
