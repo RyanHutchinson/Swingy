@@ -24,7 +24,7 @@
     </dependencies>
 
     <build>
-        <finalName>Swingy</finalName>
+        <finalName>swingything</finalName>
         <plugins>
 
             <plugin>
