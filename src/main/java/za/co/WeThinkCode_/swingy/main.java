@@ -1,23 +1,32 @@
 package za.co.WeThinkCode_.swingy;
 
-import za.co.WeThinkCode_.swingy.control.Controller;
+import za.co.WeThinkCode_.swingy.model.player.Customer;
 
-import javax.naming.ldap.Control;
+import javax.validation.constraints.Null;
+import java.util.Scanner;
 
-public class main{
+public class main {
     public static void main(String[] args) {
-        Controller GameControl;
-        if (args.length > 0) {
-            if (args[0].equalsIgnoreCase("-console") || args[0].equalsIgnoreCase("-gui")) {
-                GameControl = new Controller(args[0]);
-                GameControl.whatIsView();
-            } else {
-                System.out.println("Invalid command.\nPlease use a valid flag: [-gui , -console]");
-                System.exit(0);
+
+        Scanner scn = new Scanner(System.in);
+        String thing = null;
+
+
+        boolean state = true;
+        while (state){
+            System.out.print("Gimme nem: ");
+            if((thing = scn.nextLine()).equals("")){
+                thing = null;
             }
-        } else {
-            System.out.println("Invalid command.\nPlease use a valid flag: [-gui , -console]");
-            System.exit(0);
+            try{
+                Customer test = Customer.builder().id(1).name(thing).build();
+                System.out.println(test);
+                state = false;
+            }catch (NullPointerException e){
+                System.out.println("Name cannot be empty");
+            }
         }
+
+
     }
 }
