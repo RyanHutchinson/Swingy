@@ -8,11 +8,11 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @Getter
 @ToString
-public class OneEyedMask extends Legendary{
+public class LuckyPants extends Legendary{
 
     @Builder.Default
-    protected int atk = 20;
+    protected int atk = 40;
     @Builder.Default
-    protected int def = 30;
+    protected int def = 10;
 
 }

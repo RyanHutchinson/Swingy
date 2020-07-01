@@ -1,30 +1,28 @@
 package za.co.WeThinkCode_.swingy;
 
-import za.co.WeThinkCode_.swingy.model.player.Customer;
 
-import javax.validation.constraints.Null;
+import za.co.WeThinkCode_.swingy.model.enemy.Cabal;
+import za.co.WeThinkCode_.swingy.model.player.Hero;
+import za.co.WeThinkCode_.swingy.model.player.Warlock;
 import java.util.Scanner;
 
 public class main {
     public static void main(String[] args) {
 
-        Scanner scn = new Scanner(System.in);
-        String thing = null;
+        Cabal enemy = Cabal.builder().build();
+        Warlock player = Warlock.builder()
+                                        .level(1)
+                                        .name("me")
+                                        .build();
 
-
-        boolean state = true;
-        while (state){
-            System.out.print("Gimme nem: ");
-            if((thing = scn.nextLine()).equals("")){
-                thing = null;
+        try {
+            if (player.fight(enemy)){
+                System.out.println("You won the fight!");
+            } else {
+                System.out.println("You lost the fight!");
             }
-            try{
-                Customer test = Customer.builder().id(1).name(thing).build();
-                System.out.println(test);
-                state = false;
-            }catch (NullPointerException e){
-                System.out.println("Name cannot be empty");
-            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
 
