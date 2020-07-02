@@ -11,7 +11,7 @@ import za.co.WeThinkCode_.swingy.model.legendary.Legendary;
 @SuperBuilder
 @Getter
 @ToString
-public class Hero {
+public abstract class Hero {
     @NonNull
     protected String name;
     @Builder.Default
