@@ -9,6 +9,15 @@ public interface Iview {
 
     public abstract void say(String say);
     public abstract void startMenu();
+    public abstract void createCharacterMenu();
+    public abstract void moveCharacterScreen();
+    public abstract void fightScreen();
+    public abstract void fightWonScreen();
+    public abstract void fightLostScreen();
+    public abstract void ranAway();
+    public abstract void ranNotAway();
+    public abstract void endRound();
+    public abstract void endRoundDing();
     public abstract void quitVerify();
     public abstract void quit();
 
