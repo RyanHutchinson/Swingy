@@ -4,7 +4,7 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 import za.co.WeThinkCode_.swingy.control.LogicController;
 import za.co.WeThinkCode_.swingy.model.enemy.*;
-import za.co.WeThinkCode_.swingy.model.legendary.Legendary;
+import za.co.WeThinkCode_.swingy.model.legendary.*;
 
 import java.util.Random;
 
@@ -52,6 +52,7 @@ public abstract class Hero {
         else
             return (this.doesFight())? LogicController.Stage.FIGHT : LogicController.Stage.PLAY_MOVE;
     }
+
     public LogicController.Stage fight(){
         Enemy enemy = randomEnemy();
         int playerHP = this.getHp() + this.getDef() + this.getItem().getDef();
@@ -65,19 +66,31 @@ public abstract class Hero {
             playerHP -= enemyATK;
         }
         this.exp += (this.getLevel()) * 100;
-        return (playerHP > 0)? LogicController.Stage.FIGHT_WON : LogicController.Stage.FIGHT_LOST;
+        this.hp = playerHP;
+        if(playerHP > 0){
+            return (doesDropItem())? LogicController.Stage.FIGHT_WON_DROPPED_ITEM : LogicController.Stage.FIGHT_WON;
+        } else {
+            return LogicController.Stage.FIGHT_LOST;
+        }
+    }
 
+    private boolean doesDropItem(){
+        Random rand = new Random();
+        int chance = rand.nextInt(1000);
+
+        return (chance > 300); //TODO change value post testing
     }
 
     private boolean doesFight(){
         Random rand = new Random();
         int chance = rand.nextInt(1000);
 
-        return (chance > 300);
+        return (chance > 300); //TODO change value post testing
     }
+
     private Enemy randomEnemy(){
         int type = new Random().nextInt(4);
-        Enemy enemy;
+        Enemy enemy = null;
 
         switch (type){
             case 0:
@@ -92,24 +105,56 @@ public abstract class Hero {
             case 3:
                 enemy = Vex.builder().build();
                 break;
-            default:
-                enemy = Cabal.builder().build();
-                break;
         }
         return enemy;
     }
-    private boolean endRound(){
+
+    public Legendary randomItem(){
+        int type = new Random().nextInt(6);
+        Legendary tempItem = null;
+
+        switch (type){
+            case 0:
+                tempItem = DubstepGun.builder().build();
+                break;
+            case 1:
+                tempItem = Izanagis.builder().build();
+                break;
+            case 2:
+                tempItem = LeviathansBreath.builder().build();
+                break;
+            case 3:
+                tempItem = LuckyPants.builder().build();
+                break;
+            case 4:
+                tempItem = OneEyedMask.builder().build();
+                break;
+            case 5:
+                tempItem = TheStag.builder().build();
+                break;
+        }
+        return tempItem;
+    }
+
+    public boolean endRound(){
 
         this.coordinates[0] = 0;
         this.coordinates[1] = 0;
-        this.hp = 100;
-        this.exp += (level * 100);
-        if(this.exp >= (this.level * 1000 + ((level - 1) * (level - 1)) * 450)){
-            levelUp();
-            return true;
-        }else{
+
+        if (this.getHp() <= 0){
+            this.setHp(100);
             return false;
+        } else {
+            this.setHp(100);
+            this.exp += (level * 100);
+            if(this.exp >= (this.level * 1000 + ((level - 1) * (level - 1)) * 450)) {
+                levelUp();
+                return true;
+            }else{
+                return false;
+            }
         }
     }
+
     void levelUp(){ } //method exists in Children
 }

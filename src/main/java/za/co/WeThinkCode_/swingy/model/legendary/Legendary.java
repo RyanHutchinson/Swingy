@@ -6,6 +6,7 @@ import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 @Getter
+@ToString
 @SuperBuilder
 public class Legendary {
     protected int atk;

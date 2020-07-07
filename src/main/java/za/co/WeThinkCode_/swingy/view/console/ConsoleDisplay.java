@@ -5,8 +5,13 @@ import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang3.ArrayUtils;
 import za.co.WeThinkCode_.swingy.control.LogicController;
+import za.co.WeThinkCode_.swingy.model.legendary.Legendary;
 import za.co.WeThinkCode_.swingy.view.Iview;
+
+import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Scanner;
 
 @Builder
@@ -17,11 +22,6 @@ public class ConsoleDisplay implements Iview {
     private LogicController controller;
     @Builder.Default
     private Scanner scanner = new Scanner(System.in);
-
-    @Override
-    public void say(String say) {
-        System.out.println(say);
-    }
 
     @Override
     public void startMenu() {
@@ -63,7 +63,11 @@ public class ConsoleDisplay implements Iview {
                 System.out.print(
                                 "******************************************************************************\n" +
                                 "*                                     MAIN MENU                              *\n" +
-                                "*            1.) New Game    2.) Load Game   3.) Quit  4.) Continue          *\n" +
+                                "*                                                                            *\n" +
+                                "*                    1.) New Game    2.) Load Game   3.) Quit                *\n" +
+                                "*                                                                            *\n" +
+                                "*                            4.) Continue The Adventure!                     *\n" +
+                                "*                                                                            *\n" +
                                 "******************************************************************************\n" +
                                 "Please type choice: \n"
                 );
@@ -135,6 +139,63 @@ public class ConsoleDisplay implements Iview {
     }
 
     @Override
+    public void loadCharacterMenu() {
+        String[] input = {""};
+
+        File file = new File(controller.getSaveFilePath());
+
+        File[] fileNames = file.listFiles();
+
+        ArrayList<String> validInputs = new ArrayList<String>();
+
+        if (fileNames.length < 1){
+            System.out.print(
+                            "******************************************************************************\n" +
+                            "*                              LOAD CHARACTER                                *\n" +
+                            "*                 No Saved Characters. Press enter to go back to menu        *\n" +
+                            "******************************************************************************\n"
+            );
+
+            scanner.nextLine();
+            input[0] = "NO_SAVED_FILES";
+
+        } else {
+            for (File fileName : fileNames) {
+
+                validInputs.add(fileName.getName().split("\\.")[0]);
+
+            }
+            while (!(validInputs.contains(input[0]))){
+
+                clearScreen();
+                printSplash();
+
+                System.out.print(
+                                "******************************************************************************\n" +
+                                "*                              LOAD CHARACTER                                *\n" +
+                                "*                  Please type a name from the list below:                   *\n" +
+                                "******************************************************************************\n"
+                );
+
+                for (String validInput : validInputs) {
+                    System.out.println("*- ".concat(validInput));
+                }
+
+                System.out.println("Please type name here: ");
+
+                input[0] = scanner.nextLine();
+
+                if (!(validInputs.contains(input[0])))
+                {
+                    System.out.println("\nInvalid choice");
+                    try { Thread.sleep(1000);} catch (InterruptedException ex) {ex.printStackTrace();}
+                }
+            }
+        }
+        controller.handleInput(input);
+    }
+
+    @Override
     public void moveCharacterScreen() {
         String[] input = {""};
         String[] validInputs = {"1","2","3","4","5"};
@@ -142,7 +203,7 @@ public class ConsoleDisplay implements Iview {
         while (!(ArrayUtils.contains(validInputs, input[0]))){
 
             clearScreen();
-            printSplash();
+            printCharacter();
 
             System.out.print(
                             "******************************************************************************\n" +
@@ -172,7 +233,7 @@ public class ConsoleDisplay implements Iview {
         while (!(ArrayUtils.contains(validInputs, input[0]))){
 
             clearScreen();
-            printSplash();
+            printCharacter();
 
             System.out.print(
                     "******************************************************************************\n" +
@@ -196,7 +257,7 @@ public class ConsoleDisplay implements Iview {
     @Override
     public void fightWonScreen() {
         clearScreen();
-        printSplash();
+        printCharacter();
 
         System.out.print(
                 "******************************************************************************\n" +
@@ -206,12 +267,72 @@ public class ConsoleDisplay implements Iview {
         );
 
         scanner.nextLine();
+        controller.handleInput(new String[]{""});
+    }
+
+    @Override
+    public void fightWonDroppedItemScreen() {
+        String[] input = {"",""};
+        String[] validInputs = {"1","2"};
+
+        Legendary item = controller.hero.randomItem();
+
+        if (controller.hero.getItem() == item){
+            System.out.print(
+                            "******************************************************************************\n" +
+                            "*                               YOU WON THE FIGHT!                           *\n" +
+                            "*                          THE ENEMY DROPPED A DAMN DUPE!                    *\n" +
+                            "*                             press enter to continue                        *\n" +
+                            "******************************************************************************\n"
+            );
+            scanner.nextLine();
+            controller.handleInput(new String[]{"2"});
+        } else {
+            int atk = (controller.hero.getItem().getAtk() - item.getAtk());
+            int def = (controller.hero.getItem().getDef() - item.getDef());
+
+            String atkSymbol = (atk > 0)? "-" : "+";
+            String defSymbol = (def > 0)? "-" : "+";
+
+            if(atk < 0) atk *= -1;
+
+            if(def < 0) def *= -1;
+
+            while (!(ArrayUtils.contains(validInputs, input[0]))){
+
+                clearScreen();
+                printCharacter();
+
+                System.out.print(
+                        "******************************************************************************\n" +
+                                "*                               YOU WON THE FIGHT!                           *\n" +
+                                "*                               THE ENEMY DROPPED                            *\n" +
+                                "* Name : " + item.getClass().getSimpleName() + "\n" +
+                                "* ATK  : " + atkSymbol + atk + "\n" +
+                                "* DEF  : " + defSymbol + def + "\n" +
+                                "*                                  KEEP IT?                                  *\n" +
+                                "*                  1.) YES                         2.) NO                    *\n" +
+                                "******************************************************************************\n" +
+                                "Please type choice: \n"
+                );
+
+                input[0] = scanner.nextLine();
+                input[1] = item.getClass().getSimpleName();
+
+                if (!(ArrayUtils.contains(validInputs, input[0])))
+                {
+                    System.out.println("\nInvalid choice.");
+                    try { Thread.sleep(1000);} catch (InterruptedException ex) {ex.printStackTrace();}
+                }
+            }
+            controller.handleInput(input);
+        }
     }
 
     @Override
     public void fightLostScreen() {
         clearScreen();
-        printSplash();
+        printCharacter();
 
         System.out.print(
                 "******************************************************************************\n" +
@@ -221,13 +342,14 @@ public class ConsoleDisplay implements Iview {
         );
 
         scanner.nextLine();
+        controller.handleInput(new String[]{""});
     }
 
     @Override
     public void ranAway() {
 
         clearScreen();
-        printSplash();
+        printCharacter();
 
         System.out.print(
                         "******************************************************************************\n" +
@@ -242,7 +364,7 @@ public class ConsoleDisplay implements Iview {
     @Override
     public void ranNotAway() {
         clearScreen();
-        printSplash();
+        printCharacter();
 
         System.out.print(
                 "******************************************************************************\n" +
@@ -257,7 +379,7 @@ public class ConsoleDisplay implements Iview {
     @Override
     public void endRound() {
         clearScreen();
-        printSplash();
+        printCharacter();
 
         System.out.print(
                         "******************************************************************************\n" +
@@ -267,12 +389,13 @@ public class ConsoleDisplay implements Iview {
         );
 
         scanner.nextLine();
+        controller.handleInput(new String[]{""});
     }
 
     @Override
     public void endRoundDing() {
         clearScreen();
-        printSplash();
+        printCharacter();
 
         System.out.print(
                         "******************************************************************************\n" +
@@ -283,6 +406,7 @@ public class ConsoleDisplay implements Iview {
         );
 
         scanner.nextLine();
+        controller.handleInput(new String[]{""});
     }
 
     @Override
@@ -408,6 +532,24 @@ public class ConsoleDisplay implements Iview {
                 "*                      \\____/  \\/  \\/ \\___/\\_| \\_/\\____/ \\_/                  *\n" +
                 "*                                                                             *\n" +
                 "*******************************************************************************\n"
+        );
+    }
+
+    private void printCharacter(){
+
+        System.out.print(
+                        "******************************************************************************\n" +
+                        "* " + controller.hero.getName() + "\n" +
+                        "* Class  : " + controller.hero.getClass().getSimpleName() + "\n" +
+                        "* Level  : " + controller.hero.getLevel() + "\n" +
+                        "* EXP    : " + controller.hero.getExp() + "\n" +
+                        "* Item   : " + controller.hero.getItem().getClass().getSimpleName() + "\n" +
+                        "*\n" +
+                        "* ATK    : " + (controller.hero.getItem().getAtk() + controller.hero.getAtk()) + "\n" +
+                        "* DEF    : " + (controller.hero.getItem().getDef() + controller.hero.getDef()) + "\n" +
+                        "*\n" +
+                        "* HP     : " + (controller.hero.getHp()) + "\n" +
+                        "******************************************************************************\n"
         );
     }
 
