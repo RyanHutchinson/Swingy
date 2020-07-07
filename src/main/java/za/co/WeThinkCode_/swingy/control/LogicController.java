@@ -279,6 +279,8 @@ public class LogicController {
                     .concat("\n")
                     .concat(Integer.toString(hero.getDef()))
                     .concat("\n")
+                    .concat(Integer.toString(hero.getHp()))
+                    .concat("\n")
                     .concat(hero.getItem().getClass().getSimpleName())
             );
             writer.flush();
@@ -294,7 +296,7 @@ public class LogicController {
 
         try {
             Scanner scanner = new Scanner(file);
-
+            Hero tmp;
             switch(scanner.nextLine()){
                 case "Titan":
                     this.hero = Titan.builder()
@@ -303,6 +305,7 @@ public class LogicController {
                             .exp(Integer.parseInt(scanner.nextLine()))
                             .atk(Integer.parseInt(scanner.nextLine()))
                             .def(Integer.parseInt(scanner.nextLine()))
+                            .hp(Integer.parseInt(scanner.nextLine()))
                             .build();
                     break;
                 case "Warlock":
@@ -312,6 +315,7 @@ public class LogicController {
                             .exp(Integer.parseInt(scanner.nextLine()))
                             .atk(Integer.parseInt(scanner.nextLine()))
                             .def(Integer.parseInt(scanner.nextLine()))
+                            .hp(Integer.parseInt(scanner.nextLine()))
                             .build();
                     break;
                 case "Hunter":
@@ -321,10 +325,10 @@ public class LogicController {
                             .exp(Integer.parseInt(scanner.nextLine()))
                             .atk(Integer.parseInt(scanner.nextLine()))
                             .def(Integer.parseInt(scanner.nextLine()))
+                            .hp(Integer.parseInt(scanner.nextLine()))
                             .build();
                     break;
             }
-
             String itemName = scanner.nextLine();
 
             switch (itemName){
