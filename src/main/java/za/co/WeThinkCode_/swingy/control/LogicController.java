@@ -10,7 +10,7 @@ import za.co.WeThinkCode_.swingy.model.player.Titan;
 import za.co.WeThinkCode_.swingy.model.player.Warlock;
 import za.co.WeThinkCode_.swingy.view.Iview;
 import za.co.WeThinkCode_.swingy.view.console.ConsoleDisplay;
-
+import za.co.WeThinkCode_.swingy.view.gui.GuiDisplay;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
@@ -41,70 +41,69 @@ public class LogicController {
     String saveFilePath = new File("").getAbsolutePath().concat("\\SaveFiles\\");
     @Builder.Default
     private Stage gameStage = Stage.MAIN_MENU;
+    @Builder.Default
+    private Boolean notSetup = true;
     public String gameView;
     private Iview view;
     public Hero hero;
 
     public void runGame(){
 
-        Scanner scanner = new Scanner(System.in);
-        if(gameView.equalsIgnoreCase("-console")){
-            view = ConsoleDisplay.builder().controller(this).build();
-        } else {
-            //TODO: guibuilder
+        if (notSetup){
+            view = (gameView.equalsIgnoreCase("-console"))?
+                    ConsoleDisplay.builder().controller(this).build() :
+                    GuiDisplay.builder().controller(this).build();
+            notSetup = false;
         }
 
-        while (true){
+        switch (gameStage){
+            case MAIN_MENU:
+                view.startMenu();
+                break;
 
-            switch (gameStage){
-                case MAIN_MENU:
-                    view.startMenu();
-                    break;
+            case NEW_CHARACTER_MENU:
+                view.createCharacterMenu();
+                break;
 
-                case NEW_CHARACTER_MENU:
-                    view.createCharacterMenu();
-                    break;
+            case LOAD_CHARACTER_MENU:
+                view.loadCharacterMenu();
+                break;
 
-                case LOAD_CHARACTER_MENU:
-                    view.loadCharacterMenu();
-                    break;
+            case PLAY_MOVE:
+                view.moveCharacterScreen();
+                break;
 
-                case PLAY_MOVE:
-                    view.moveCharacterScreen();
-                    break;
+            case FIGHT:
+                view.fightScreen();
+                break;
 
-                case FIGHT:
-                    view.fightScreen();
-                    break;
+            case FIGHT_WON:
+                view.fightWonScreen();
+                break;
 
-                case FIGHT_WON:
-                    view.fightWonScreen();
-                    break;
+            case FIGHT_WON_DROPPED_ITEM:
+                view.fightWonDroppedItemScreen();
+                break;
 
-                case FIGHT_WON_DROPPED_ITEM:
-                    view.fightWonDroppedItemScreen();
-                    break;
+            case FIGHT_LOST:
+                view.fightLostScreen();
+                break;
 
-                case FIGHT_LOST:
-                    view.fightLostScreen();
-                    break;
+            case END_ROUND:
+                view.endRound();
+                break;
 
-                case END_ROUND:
-                    view.endRound();
-                    break;
+            case END_ROUND_DING:
+                view.endRoundDing();
+                break;
 
-                case END_ROUND_DING:
-                    view.endRoundDing();
-                    break;
+            case QUIT_VERIFY:
+                view.quitVerify();
+                break;
 
-                case QUIT_VERIFY:
-                    view.quitVerify();
-                    break;
-
-                case QUIT:
-                    view.quit();
-                    System.exit(1);
-            }
+            case QUIT:
+                view.quit();
+                System.exit(1);
         }
     }
 
@@ -126,9 +125,10 @@ public class LogicController {
                         gameStage = Stage.PLAY_MOVE;
                         break;
                     default:
-                        System.out.println("Something went terribly wrong??");
+                        System.out.println("HandleInput MAIN_MENU Error");
                         System.exit(-1);
                 }
+                runGame();
                 break;
 
             case NEW_CHARACTER_MENU:
@@ -156,6 +156,7 @@ public class LogicController {
                         break;
                 }
                 saveHero();
+                runGame();
                 break;
 
             case LOAD_CHARACTER_MENU:
@@ -168,6 +169,7 @@ public class LogicController {
                         gameStage = Stage.MAIN_MENU;
                         break;
                 }
+                runGame();
                 break;
 
             case PLAY_MOVE:
@@ -180,6 +182,7 @@ public class LogicController {
                         gameStage = hero.move(input[0]);
                         break;
                 }
+                runGame();
                 break;
 
             case FIGHT:
@@ -197,10 +200,12 @@ public class LogicController {
                         }
                         break;
                 }
+                runGame();
                 break;
 
             case FIGHT_WON:
                 gameStage = Stage.PLAY_MOVE;
+                runGame();
                 break;
 
             case FIGHT_WON_DROPPED_ITEM:
@@ -231,17 +236,20 @@ public class LogicController {
                         break;
                 }
                 gameStage = Stage.PLAY_MOVE;
+                runGame();
                 break;
 
             case FIGHT_LOST:
                 hero.endRound();
                 gameStage = Stage.MAIN_MENU;
+                runGame();
                 break;
 
             case END_ROUND_DING:
             case END_ROUND:
                 saveHero();
                 gameStage = Stage.PLAY_MOVE;
+                runGame();
                 break;
 
             case QUIT_VERIFY:
@@ -253,9 +261,11 @@ public class LogicController {
                         gameStage = Stage.MAIN_MENU;
                         break;
                     default:
-                        System.out.println("Something went terribly wrong");
+                        System.out.println("HandleInput QUIT_VERIFY error");
+                        System.out.println(input[0]);
                         System.exit(-1);
                 }
+                runGame();
                 break;
         }
     }
@@ -279,7 +289,7 @@ public class LogicController {
                     .concat("\n")
                     .concat(Integer.toString(hero.getDef()))
                     .concat("\n")
-                    .concat(Integer.toString(hero.getHp()))
+                    .concat(Integer.toString(hero.getHpLevel()))
                     .concat("\n")
                     .concat(hero.getItem().getClass().getSimpleName())
             );
@@ -292,11 +302,15 @@ public class LogicController {
 
     public void loadHero(String name){
 
-        File file = new File(saveFilePath.concat(name).concat(".txt"));
+        File file = new File(
+                saveFilePath
+                .concat(name)
+                .concat(".txt")
+        );
 
         try {
             Scanner scanner = new Scanner(file);
-            Hero tmp;
+
             switch(scanner.nextLine()){
                 case "Titan":
                     this.hero = Titan.builder()
@@ -307,6 +321,7 @@ public class LogicController {
                             .def(Integer.parseInt(scanner.nextLine()))
                             .hp(Integer.parseInt(scanner.nextLine()))
                             .build();
+                    hero.setHpLevel(hero.getHp());
                     break;
                 case "Warlock":
                     this.hero = Warlock.builder()
@@ -317,6 +332,7 @@ public class LogicController {
                             .def(Integer.parseInt(scanner.nextLine()))
                             .hp(Integer.parseInt(scanner.nextLine()))
                             .build();
+                    hero.setHpLevel(hero.getHp());
                     break;
                 case "Hunter":
                     this.hero = Hunter.builder()
@@ -327,12 +343,14 @@ public class LogicController {
                             .def(Integer.parseInt(scanner.nextLine()))
                             .hp(Integer.parseInt(scanner.nextLine()))
                             .build();
+                    hero.setHpLevel(hero.getHp());
                     break;
             }
+
             String itemName = scanner.nextLine();
 
             switch (itemName){
-                case "Dubstepgun":
+                case "DubstepGun":
                     hero.setItem(DubstepGun.builder().build());
                     break;
                 case "Izanagis":
@@ -357,6 +375,6 @@ public class LogicController {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-
     }
+
 }

@@ -27,7 +27,7 @@ public class Hunter extends Hero{
         this.exp = 0;
         this.atk = (int)Math.ceil(this.atk * 1.125);
         this.def = (int)Math.ceil(this.def * 1.125);
-        this.hp = (int)Math.ceil(this.hp * 1.1);
+        this.hpLevel = (int)Math.ceil(this.hpLevel * 1.1);
         this.level += 1;
     }
 }

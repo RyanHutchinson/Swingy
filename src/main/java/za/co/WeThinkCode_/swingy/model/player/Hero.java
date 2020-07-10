@@ -8,11 +8,11 @@ import za.co.WeThinkCode_.swingy.model.legendary.*;
 
 import java.util.Random;
 
-@SuperBuilder
 @Getter
 @Setter
 @ToString
-public abstract class Hero {
+@SuperBuilder
+public class Hero {
     @NonNull
     protected String name;
     @Builder.Default
@@ -24,6 +24,8 @@ public abstract class Hero {
     @Builder.Default
     protected int def = 0;
     @Builder.Default
+    protected int hpLevel = 100;
+    @Builder.Default
     protected int hp = 100;
     @Builder.Default
     protected int[] coordinates = {0,0};
@@ -32,6 +34,7 @@ public abstract class Hero {
     public LogicController.Stage move(String direction){
 
         int bounds = (((level-1) * 5 + 10 - (level%2)) - 1) / 2;
+        this.hp = ((this.coordinates[0] == 0) && (this.coordinates[1] == 0))? this.hpLevel: this.hp;
 
         switch (direction){
             case "1":
@@ -142,10 +145,10 @@ public abstract class Hero {
         this.coordinates[1] = 0;
 
         if (this.getHp() <= 0){
-            this.setHp(100);
+            this.setHp(this.hpLevel);
             return false;
         } else {
-            this.setHp(100);
+            this.setHp(this.hpLevel);
             this.exp += (level * 100);
             if(this.exp >= (this.level * 1000 + ((level - 1) * (level - 1)) * 450)) {
                 levelUp();

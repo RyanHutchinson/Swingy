@@ -7,11 +7,9 @@ import org.apache.commons.lang3.ArrayUtils;
 import za.co.WeThinkCode_.swingy.control.LogicController;
 import za.co.WeThinkCode_.swingy.model.legendary.Legendary;
 import za.co.WeThinkCode_.swingy.view.Iview;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Objects;
 import java.util.Scanner;
 
 @Builder
