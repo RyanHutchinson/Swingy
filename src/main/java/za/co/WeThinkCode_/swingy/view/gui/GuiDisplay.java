@@ -17,76 +17,151 @@ public class GuiDisplay implements Iview {
 
     @Override
     public void startMenu() {
-        MainMenu generate = MainMenu.builder().controller(controller).frame(frame).build();
+        StartMenu generate = StartMenu.builder()
+                .controller(controller)
+                .frame(frame)
+                .build();
+
         makeWindow();
         generate.view();
     }
 
     @Override
     public void createCharacterMenu() {
+        CreateCharacterMenu generate = CreateCharacterMenu.builder()
+                .controller(controller)
+                .frame(frame)
+                .build();
 
-    }
-
-    @Override
-    public void loadCharacterMenu() {
-
-    }
-
-    @Override
-    public void moveCharacterScreen() {
-
-    }
-
-    @Override
-    public void fightScreen() {
-
-    }
-
-    @Override
-    public void fightWonDroppedItemScreen() {
-
-    }
-
-    @Override
-    public void fightWonScreen() {
-
-    }
-
-    @Override
-    public void fightLostScreen() {
-
-    }
-
-    @Override
-    public void ranAway() {
-
-    }
-
-    @Override
-    public void ranNotAway() {
-
-    }
-
-    @Override
-    public void endRound() {
-
-    }
-
-    @Override
-    public void endRoundDing() {
-
-    }
-
-    @Override
-    public void quitVerify() {
-        QuitVerify generate = QuitVerify.builder().controller(controller).frame(frame).build();
         makeWindow();
         generate.view();
     }
 
     @Override
-    public void quit() {
+    public void loadCharacterMenu() {
+        LoadCharacterMenu generate = LoadCharacterMenu.builder()
+                .controller(controller)
+                .frame(frame)
+                .build();
 
+        makeWindow();
+        generate.view();
+    }
+
+    @Override
+    public void moveCharacterScreen() {
+        MoveCharacterScreen generate = MoveCharacterScreen.builder()
+                .controller(controller)
+                .frame(frame)
+                .build();
+
+        makeWindow();
+        generate.view();
+    }
+
+    @Override
+    public void fightScreen() {
+        FightScreen generate = FightScreen.builder()
+                .controller(controller)
+                .frame(frame)
+                .build();
+
+        makeWindow();
+        generate.view();
+    }
+
+    @Override
+    public void fightWonDroppedItemScreen() {
+        FightWonDroppedItemScreen generate = FightWonDroppedItemScreen.builder()
+                .controller(controller)
+                .frame(frame)
+                .build();
+
+        makeWindow();
+        generate.view();
+    }
+
+    @Override
+    public void fightWonScreen() {
+        FightWonScreen generate = FightWonScreen.builder()
+                .controller(controller)
+                .frame(frame)
+                .build();
+
+        makeWindow();
+        generate.view();
+    }
+
+    @Override
+    public void fightLostScreen() {
+        FightLostScreen generate = FightLostScreen.builder()
+                .controller(controller)
+                .frame(frame)
+                .build();
+
+        makeWindow();
+        generate.view();
+    }
+
+    @Override
+    public void ranAway() {
+        RanAway generate = RanAway.builder()
+                .controller(controller)
+                .frame(frame)
+                .build();
+
+        makeWindow();
+        generate.view();
+    }
+
+    @Override
+    public void ranNotAway() {
+        RanNotAway generate = RanNotAway.builder()
+                .controller(controller)
+                .frame(frame)
+                .build();
+
+        makeWindow();
+        generate.view();
+    }
+
+    @Override
+    public void endRound() {
+        EndRoundScreen generate = EndRoundScreen.builder()
+                .controller(controller)
+                .frame(frame)
+                .build();
+
+        makeWindow();
+        generate.view();
+    }
+
+    @Override
+    public void endRoundDing() {
+        EndRoundDingScreen generate = EndRoundDingScreen.builder()
+                .controller(controller)
+                .frame(frame)
+                .build();
+
+        makeWindow();
+        generate.view();
+    }
+
+    @Override
+    public void quitVerify() {
+        QuitVerify generate = QuitVerify.builder()
+                .controller(controller)
+                .frame(frame)
+                .build();
+
+        makeWindow();
+
+        generate.view();
+    }
+
+    @Override
+    public void quit() {
+        //TODO
     }
 
     public static void makeWindow(){

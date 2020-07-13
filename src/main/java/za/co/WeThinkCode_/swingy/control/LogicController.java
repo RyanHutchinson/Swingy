@@ -40,9 +40,8 @@ public class LogicController {
     @Builder.Default
     String saveFilePath = new File("").getAbsolutePath().concat("\\SaveFiles\\");
     @Builder.Default
-    private Stage gameStage = Stage.MAIN_MENU;
-    @Builder.Default
     private Boolean notSetup = true;
+    private Stage gameStage;
     public String gameView;
     private Iview view;
     public Hero hero;
@@ -53,6 +52,7 @@ public class LogicController {
             view = (gameView.equalsIgnoreCase("-console"))?
                     ConsoleDisplay.builder().controller(this).build() :
                     GuiDisplay.builder().controller(this).build();
+            gameStage = Stage.MAIN_MENU;
             notSetup = false;
         }
 
@@ -137,31 +137,36 @@ public class LogicController {
                         try {
                             this.hero = Warlock.builder().name(input[1]).build();
                         } catch (NullPointerException e){System.out.println("Woops nullpointer in inputhandler");}
-                        gameStage = Stage.PLAY_MOVE;
+                        saveHero();
+                        gameStage = Stage.MAIN_MENU;
                         break;
                     case "2":
                         try {
                             this.hero = Titan.builder().name(input[1]).build();
                         } catch (NullPointerException e){System.out.println("Woops nullpointer in inputhandler");}
-                        gameStage = Stage.PLAY_MOVE;
+                        saveHero();
+                        gameStage = Stage.MAIN_MENU;
                         break;
                     case "3":
                         try {
                             this.hero = Hunter.builder().name(input[1]).build();
                         } catch (NullPointerException e){System.out.println("Woops nullpointer in inputhandler");}
-                        gameStage = Stage.PLAY_MOVE;
+                        gameStage = Stage.MAIN_MENU;
+                        saveHero();
                         break;
                     case "4":
                         gameStage = Stage.MAIN_MENU;
                         break;
                 }
-                saveHero();
                 runGame();
                 break;
 
             case LOAD_CHARACTER_MENU:
                 switch (input[0]){
                     case "NO_SAVED_FILES":
+                        gameStage = Stage.MAIN_MENU;
+                        break;
+                    case "HARD_EXIT":
                         gameStage = Stage.MAIN_MENU;
                         break;
                     default:
@@ -191,7 +196,7 @@ public class LogicController {
                         gameStage = hero.fight();
                         break;
                     case "2":
-                        if (new Random().nextInt(1000) > 700) {
+                        if (new Random().nextInt(1000) > 700) { //TODO balance
                             view.ranNotAway();
                             gameStage = hero.fight();
                         } else {
@@ -240,15 +245,29 @@ public class LogicController {
                 break;
 
             case FIGHT_LOST:
-                hero.endRound();
-                gameStage = Stage.MAIN_MENU;
-                runGame();
+                switch (input[0]){
+                    case "":
+                        hero.endRound();
+                        gameStage = Stage.MAIN_MENU;
+                        runGame();
+                        break;
+                    default:
+                        System.out.println("Handler Fight_Lost error");
+                        break;
+                }
                 break;
 
             case END_ROUND_DING:
             case END_ROUND:
-                saveHero();
-                gameStage = Stage.PLAY_MOVE;
+                switch (input[0]){
+                    case "":
+                        saveHero();
+                        gameStage = Stage.PLAY_MOVE;
+                        break;
+                    default:
+                        System.out.println("Input Handler END_ROUND Error");
+                        break;
+                }
                 runGame();
                 break;
 

@@ -81,7 +81,7 @@ public class Hero {
         Random rand = new Random();
         int chance = rand.nextInt(1000);
 
-        return (chance > 300); //TODO change value post testing
+        return (chance > 1); //TODO change value post testing
     }
 
     private boolean doesFight(){

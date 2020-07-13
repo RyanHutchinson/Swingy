@@ -11,20 +11,20 @@ import java.awt.event.ActionListener;
 
 @Builder
 @Getter
-public class MainMenu {
+public class StartMenu {
 
-    private final LogicController controller;
-    private final JFrame frame;
+    private final LogicController   controller;
+    private final JFrame            frame;
 
-    private JPanel  splashPanel,
-                    buttonPanel;
+    private JPanel                  splashPanel,
+                                    buttonPanel;
 
-    private JLabel title;
+    private JLabel                  title;
 
-    private JButton newCharacter,
-                    loadCharacter,
-                    exitGame,
-                    continueGame;
+    private JButton                 newCharacter,
+                                    loadCharacter,
+                                    exitGame,
+                                    continueGame;
 
     public void view(){
         generatePanels();
@@ -37,10 +37,13 @@ public class MainMenu {
         splashPanel = new JPanel();
         splashPanel.setBounds(100,100,600, 150);
         splashPanel.setBackground(Color.darkGray);
+        splashPanel.setVisible(true);
 
         buttonPanel = new JPanel();
-        buttonPanel.setBounds(300, 260,200, 340);
+        buttonPanel.setBounds(300, 260,200, 200);
         buttonPanel.setBackground(Color.darkGray);
+        buttonPanel.setLayout(new GridLayout(4,1));
+        buttonPanel.setVisible(true);
 
     }
 
@@ -53,77 +56,69 @@ public class MainMenu {
 
     private void generateButtons(){
 
-/**************************************************************************
- NEW CHARACTER BUTTON
- ***************************************************************************/
+        /**************************************************************************
+         NEW CHARACTER BUTTON
+         ***************************************************************************/
         newCharacter = new JButton();
         newCharacter.setText("New Game");
         newCharacter.setFont(new Font("Ariel",Font.PLAIN,20));
         newCharacter.setBackground(Color.DARK_GRAY);
         newCharacter.setForeground(Color.WHITE);
-        newCharacter.setBounds(0,0,300,50);
 
         newCharacter.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                splashPanel.setVisible(false);
-                buttonPanel.setVisible(false);
+                clearPanels();
                 controller.handleInput(new String[]{"1"});
             }
         });
 
-/**************************************************************************
- LOAD CHARACTER BUTTON
-***************************************************************************/
+        /**************************************************************************
+         LOAD CHARACTER BUTTON
+        ***************************************************************************/
         loadCharacter = new JButton();
         loadCharacter.setText("Load Game");
         loadCharacter.setFont(new Font("Ariel",Font.PLAIN,20));
         loadCharacter.setBackground(Color.DARK_GRAY);
         loadCharacter.setForeground(Color.WHITE);
-        loadCharacter.setBounds(0,0,300,50);
 
         loadCharacter.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                splashPanel.setVisible(false);
-                buttonPanel.setVisible(false);
+                clearPanels();
                 controller.handleInput(new String[]{"2"});
             }
         });
-/**************************************************************************
- EXIT BUTTON
- ***************************************************************************/
+        /**************************************************************************
+         EXIT BUTTON
+         ***************************************************************************/
         exitGame = new JButton();
         exitGame.setText("Exit");
         exitGame.setFont(new Font("Ariel",Font.PLAIN,20));
         exitGame.setBackground(Color.DARK_GRAY);
         exitGame.setForeground(Color.WHITE);
-        exitGame.setBounds(0,0,300,50);
 
         exitGame.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                splashPanel.setVisible(false);
-                buttonPanel.setVisible(false);
+                clearPanels();
                 controller.handleInput(new String[]{"3"});
             }
         });
 
-/**************************************************************************
- CONTINUE GAME BUTTON BUTTON
- ***************************************************************************/
+        /**************************************************************************
+         CONTINUE GAME BUTTON BUTTON
+         ***************************************************************************/
         continueGame = new JButton();
         continueGame.setText("Continue Game");
         continueGame.setFont(new Font("Ariel",Font.PLAIN,20));
         continueGame.setBackground(Color.DARK_GRAY);
         continueGame.setForeground(Color.WHITE);
-        continueGame.setBounds(0,0,200,50);
 
         continueGame.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                splashPanel.setVisible(false);
-                buttonPanel.setVisible(false);
+                clearPanels();
                 controller.handleInput(new String[]{"4"});
             }
         });
@@ -131,13 +126,18 @@ public class MainMenu {
 
     private void populatePanels(){
         splashPanel.add(title);
+        if(controller.hero != null)
+            buttonPanel.add(continueGame);
         buttonPanel.add(newCharacter);
         buttonPanel.add(loadCharacter);
         buttonPanel.add(exitGame);
-        if(controller.hero != null)
-            buttonPanel.add(continueGame);
         frame.getContentPane().add(splashPanel);
         frame.getContentPane().add(buttonPanel);
+        frame.validate();
     }
 
+    private void clearPanels(){
+        splashPanel.setVisible(false);
+        buttonPanel.setVisible(false);
+    }
 }

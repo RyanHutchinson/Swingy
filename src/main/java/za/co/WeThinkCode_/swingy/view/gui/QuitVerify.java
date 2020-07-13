@@ -43,8 +43,9 @@ public class QuitVerify {
         messagePanel.setBackground(Color.darkGray);
 
         buttonPanel = new JPanel();
-        buttonPanel.setBounds(300, 320,200, 200);
+        buttonPanel.setBounds(300, 320,200, 50);
         buttonPanel.setBackground(Color.darkGray);
+        buttonPanel.setLayout(new GridLayout(1,2));
 
     }
 
@@ -70,7 +71,6 @@ public class QuitVerify {
         accept.setFont(new Font("Ariel",Font.PLAIN,20));
         accept.setBackground(Color.DARK_GRAY);
         accept.setForeground(Color.WHITE);
-        accept.setBounds(350,300,0,50);
 
         accept.addActionListener(new ActionListener() {
             @Override
@@ -90,7 +90,6 @@ public class QuitVerify {
         reject.setFont(new Font("Ariel",Font.PLAIN,20));
         reject.setBackground(Color.DARK_GRAY);
         reject.setForeground(Color.WHITE);
-        reject.setBounds(410,300,0,50);
 
         reject.addActionListener(new ActionListener() {
             @Override
@@ -113,6 +112,7 @@ public class QuitVerify {
         frame.getContentPane().add(splashPanel);
         frame.getContentPane().add(messagePanel);
         frame.getContentPane().add(buttonPanel);
+        frame.validate();
     }
 
 }
